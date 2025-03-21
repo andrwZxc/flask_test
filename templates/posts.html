@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+Статьи
+{% endblock %}
+
+{%block body%}
+<div class="container">
+<h1> Наши статьи: </h1>
+<!--(цикл для того, чтобы перебирать статьи) каждый элемент массива будет установлен в переменную el -->
+{% for el in articles  %}  
+<div class=" alert alert-info ">
+<h2>{{ el.title }}</h2>
+<p> {{el.intro}} </p>
+<p><b>Дата: {{el.date.date()}}</b></p>
+<button class="btn btn-warning"> Подробнее </button>
+</div>
+{% endfor %}
+
+ {{ articles[0].title }}
+
+</div>
+{%endblock%}
