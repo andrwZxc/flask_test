@@ -18,7 +18,6 @@ class Article(db.Model):
     def __repr__(self):
         return '<Article %r>' % self.id # когда выбирается объект на основе класса -> объект + id
 
-
 @app.route('/') # обращаемся к главное странице
 @app.route('/home')
 def index():
@@ -49,7 +48,7 @@ def create_article():
             db.session.commit()
             return redirect('/posts')# если успешное добавление статьи то переносим на главнубю страницу
         except:
-            return f"При добавлении статьи произошла ошибка: {str(e)}"
+            return "При добавлении статьи произошла ошибка:"
     else:
         return render_template("create_article.html")
 
