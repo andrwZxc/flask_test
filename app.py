@@ -1,4 +1,4 @@
-from flask import request, Flask, render_template, url_for, redirect
+from flask import request, Flask, render_template, url_for, redirect, abort
 import json
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -28,10 +28,33 @@ def index():
 def about():
     return render_template("about.html")
 
+
 @app.route('/posts')
 def posts():
-    articles = Article.query.order_by(Article.date).all() # Будут выводиться все статьи из БД в хронологическом порядке 
+    articles = Article.query.order_by(Article.date.desc()).all() # Будут выводиться все статьи из БД в хронологическом порядке desc нужно для того, чтобы более новые статьи отображались выше
     return render_template("posts.html", articles = articles) # сможем рабоать в шаблоне со списком статей по ключевому слову articles
+
+
+# для кнопки подробнее, чтобы можно было полноценно открыть статью
+@app.route('/posts/<int:id>') # ind:id чтобы в заголовке указывался номер статьи 
+def post_detail(id):
+    article = Article.query.get(id) 
+    if not article:
+        abort(404) # вернем 404 если статья не найдена
+    return render_template("post_detail.html", article = article) 
+
+
+# # обработчик для кнопки удалить и дополнить
+# @app.route('/posts/<int:id>/del') # ind:id чтобы в заголовке указывался номер статьи 
+# def post_detail(id):
+#     article = Article.query.get_or_404(id) # если статья будет не найдена, то будет вызвана ошибка 404
+#     try:
+#         db.session.delete(article)
+#         db.session.commit()
+#         return redirect('/posts')
+#     except:
+#         return "При удалении возникла ошибка( "
+#     return render_template("post_detail.html", article = article) 
 
 
 @app.route('/create_article', methods=['POST','GET'])
@@ -46,7 +69,7 @@ def create_article():
         try: # конструкция для обработки ошибок
             db.session.add(article)
             db.session.commit()
-            return redirect('/posts')# если успешное добавление статьи то переносим на главнубю страницу
+            return redirect('/posts')# если успешное добавление статьи то идет переадресация на страницу со всеми статьями
         except:
             return "При добавлении статьи произошла ошибка:"
     else:

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ article.title }} 
+{% endblock %}
+
+{%block body%}
+<div class="container">
+<h1> {{ article.title }} </h1>
+
+<!--(цикл для того, чтобы перебирать статьи) каждый элемент массива будет установлен в переменную el -->
+
+    <div class=" alert alert-info "> 
+<!-- Выведем полную статью (не только заголовок) -->
+    <p> {{ article.text }} </p> 
+    <p><b>Дата: {{article.date.date()}}</b></p>
+    <!-- кнопки удалить и дополнить -->
+    <a href="/posts/{{ article.id }}/del" class="btn-danger" ></a> 
+    <a href="/posts/{{ article.id }}/update" class="btn-success" ></a>
+    </div>
+
+</div>
+{%endblock%}
